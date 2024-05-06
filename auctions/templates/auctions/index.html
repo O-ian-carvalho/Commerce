@@ -1,0 +1,33 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<form id="categories" action="" method="post">
+     {%csrf_token%}              
+    <select name="categories"  onChange="this.form.submit()">
+        <option value="">All</option>
+    {% for categorie in categories%}
+        <option  value="{{categorie.pk}}" {% if selectedcategorie == categorie %} selected {%endif%}>{{categorie.name}}</option>
+    {% endfor%}    
+    </select>
+
+</form>
+    <ul id="alllisting">
+        {% for listing in listings %}
+        {%if listing.active%}
+        <li>
+            <a href="item/{{listing.pk}}">
+                <div class="listing">
+                    <img src="{{listing.image}}">
+
+                    <div style="padding-top: 10px;">
+                        <h3>{{listing.title}}</h3>
+                        <p>{{listing.description}}</p>
+                        <p id="price">$ {% if listing.biggest_bid != 0%}{{listing.biggest_bid|floatformat:2}}{%else%}{{listing.price|floatformat:2}}{%endif%}</p>  
+                    </div>           
+                </div>
+            </a>
+        </li>
+        {%endif%}
+        {% endfor %}
+    </ul>
+{% endblock %}

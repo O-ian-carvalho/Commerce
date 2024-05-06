@@ -1,0 +1,17 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div class="containercategorie">
+        <div class="categorie">
+            <form action="" method="post">
+                
+                <select name="" id="">
+                {% for categorie in categories%}
+                    <option value="">{{categorie.name}}</option>
+                {% endfor%}    
+                </select>
+               
+            </form>
+        </div>
+    </div>
+{% endblock %}

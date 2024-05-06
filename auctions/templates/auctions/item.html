@@ -1,0 +1,83 @@
+{% extends "auctions/layout.html"%}
+{% block body %}
+    <div class="seeitem">
+        <div class="item">
+            <img src="{{auction.image}}" alt="">
+            <div id="itemright">
+                <div>
+                   <h1>{{auction.title}}</h1>
+                    <p>{{auction.description}}</p>
+                    <div id="pricebid">
+                        <p style="font-size: 17pt;" id="price">$ {% if biggestbid == None %}{{auction.price|floatformat:2}}{% else %}{{biggestbid|floatformat:2}}{% endif %}</p>
+                        {% if user.is_authenticated and auction.active %}
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="todo" value="watchlist">
+                            <input onChange="this.form.submit()" {% if inwatchlist %} checked {% endif %} type="checkbox" name="" id=""> <label for="">Wachlist</label> 
+                        </form>
+                        {% endif %}
+                    </div>
+                    {%if user.is_authenticated and auction.active %}    
+                        <div class="buttons">
+                             
+                            {%if user.pk == auction.user.pk %}
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="todo" value="close">
+                                <button style="width: 100%;" id="makeabid" >Close auction</button>     
+                            </form>
+                            {%else%} 
+                                <form id="makebidinput"  action="" method="post">
+                                        {% csrf_token %}  
+                                    <input  type="hidden" name="todo" value="mekebid">
+                                    <input type="number" required placeholder="Type your bid" name="bid">                                        
+                                    <button type="submit" id="makeabid">Make a bid</button>
+                                </form> 
+                            {% endif %}
+                        </div>
+                    {% endif %}   
+
+                </div>
+                {%if user.is_authenticated%}    
+                <p id="message">{{message}}</p>
+                {% if biggestbid.user.pk == user.pk and auction.active %}
+                    <p id="message2">The highest bid is yours</p>
+                {% elif  biggestbid.user.pk == user.pk  %}
+                    <p id="message2">This product is yours</p>
+                {% endif %}
+                {%endif%}
+                
+                <a id="x" style="text-decoration: none;" href="javascript:history.back();"><div>Voltar</div></a>
+            </div>
+        </div>
+    </div>
+
+    {%if user.is_authenticated %}    
+
+    <div id="addcoment">
+        <form action="{% url 'showauction' auction.pk %}" id="addcomentform" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+            <textarea required name="textarea" placeholder="Type a Comment" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"></textarea>
+            </div>
+            <input type="hidden" name="todo" value="comment">
+            <button type="submit" class="btn btn-outline-dark">Submit</button>
+        </form>
+    </div>
+    {%endif%}
+
+    <div id="commentscontainer">
+            {%for comment in comments%}
+               <div class="comment">
+                <div id="top">
+                    <h4>{{comment.user}}</h4>
+                    <p>{% if comment.day < 10 %}0{% endif %}{{comment.day}}/{% if comment.month < 10 %}0{% endif %}{{comment.month}}/{{comment.year}}</p>
+                </div>
+                    
+                    <p>{{comment.text}}</p>
+                </div> 
+            {% endfor %}
+    </div>
+    
+
+{% endblock %}

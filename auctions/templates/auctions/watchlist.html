@@ -1,0 +1,28 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<div id="watchlist">
+     <h1 >Watchlist</h1>
+</div>
+   
+    <ul id="alllisting">
+        {% for listing in listings %}
+        
+        <li>
+            <a href="../item/{{listing.auction.pk}}">
+                <div class="listing">
+                    <img src="{{listing.auction.image}}">
+
+                    <div style="padding-top: 10px;">
+                        <h3>{{listing.auction.title}}</h3>
+                        <p>{{listing.auction.description}}</p>
+                        <p id="price">$ {% if listing.auction.biggest_bid != 0%}{{listing.auction.biggest_bid|floatformat:2}}{%else%}{{listing.auction.price|floatformat:2}}{%endif%}</p>  
+                    </div>           
+                </div>
+            </a>
+        </li>
+        
+        {% endfor %}
+    </ul>
+{% endblock %}
